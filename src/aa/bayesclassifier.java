@@ -18,12 +18,10 @@ class bayesclassifier
    static String humidity[]=new String[10000];
    static String windy[]=new String[10000];
    static String class1[]=new String[10000];
-//static String outlook[]={"S","S","O","R","R","R","O","S","S","R","S","O","O","R"};
-//static String temperature[]={"H","H","H","M","C","C","C","M","C","M","M","M","H","M"};
-//static String humidity[]={"P","P","P","P","N","N","N","P","N","N","N","P","N","P"};
-//static String windy[]={"F","T","F","F","F","T","T","F","F","F","T","T","F","T"};
-//static String class1[]={"N","N","P","P","P","N","P","N","P","P","P","P","P","N"};
-   
+   static String tableDB[][]=new String[10000][5];
+   static int[][] DTBplay,DTBnoplay;
+
+    static int[] CountDPlay,CountDnoPlay;
     static int x[][]=new int[10000][10];
     static int y[][]=new int[10000][10];
     static BigInteger m[]=new BigInteger[14];
@@ -31,12 +29,13 @@ class bayesclassifier
     static double d[][]=new double[10000][10];
     static BigInteger r=new BigInteger("1");
     static BigInteger r1=new BigInteger("1");
-
+    
+    static BigInteger[][] m0,m1,h0,h1;
     static BigInteger g;
     static BigInteger X[][]=new BigInteger[10000][5];
     static BigInteger Y[][]=new BigInteger[10000][5];
-    static BigInteger Xsum[]=new BigInteger[6];
-    static BigInteger Ysum[]=new BigInteger[6];   
+    static BigInteger[] Xsum,X0sum,X1sum;
+    static BigInteger[]Ysum,Y0sum,Y1sum;   
 
     static int countU=0;
     static int NumReC; //NumReC= Number Records = countU
@@ -45,6 +44,7 @@ class bayesclassifier
     static double NumPlay;
     static double NumNoPlay;
     static double prob[][]=new double[4][2];
+    static double prob1[][]=new double[4][2];
 
     static double pp;
     static double npp;
@@ -64,18 +64,12 @@ public static void main(String args[]){
 // connect database
     Connection conn = null;
     Statement stmt = null;
-
-    Xsum=DefaultONE(Xsum,5);
-    Ysum=DefaultONE(Ysum,5);
+    NumColumn=5;
+    Xsum=DefaultONE(Xsum,NumColumn);
+    Ysum=DefaultONE(Ysum,NumColumn);
     g=RandomBigInt(3);
-   /*for(int i=0;i<14;++i)
-    {
-        for(int j=0;j<5;++j)
-        {
-            System.out.print("test..."+test[2][j] );
-        }
-        System.out.println();
-    }*/
+    
+
    
   
    try{
@@ -94,8 +88,8 @@ public static void main(String args[]){
       while(rs.next()){
          //Retrieve by column name
          for(int i=0;i<5;++i){
-             x[countU][i]=RandomInt(32);
-             y[countU][i]=RandomInt(32);
+             x[countU][i]=RandomInt(64);
+             y[countU][i]=RandomInt(64);
              X[countU][i]=g.pow(x[countU][i]);
              Y[countU][i]=g.pow(y[countU][i]);
              Xsum[i]= Xsum[i].multiply(X[countU][i]);
@@ -103,11 +97,11 @@ public static void main(String args[]){
          }
                
          int id  = rs.getInt("id");
-         outlook[countU] = rs.getString("Outlook");
-         temperature[countU] = rs.getString("Temperature");
-         humidity[countU] = rs.getString("Humidity");
-         windy[countU] = rs.getString("Windy");
-         class1[countU] = rs.getString("Class");
+         tableDB[countU][0]=outlook[countU] = rs.getString("Outlook");
+         tableDB[countU][1]=temperature[countU] = rs.getString("Temperature");
+         tableDB[countU][2]=humidity[countU] = rs.getString("Humidity");
+         tableDB[countU][3]=windy[countU] = rs.getString("Windy");
+         tableDB[countU][4]=class1[countU] = rs.getString("Class");
          System.out.print(id+"\t\t"+outlook[countU]+"\t\t"+temperature[countU]+"\t\t"+humidity[countU]+"\t\t"+windy[countU]+"\t\t"+class1[countU]+countU);
          System.out.println();
          ++countU;
@@ -141,57 +135,60 @@ public static void main(String args[]){
    System.out.println("Goodbye!");
 //close database
    NumReC= countU; //NumReC= Number Records = 14 in this case 
-   NumColumn=5;
+   
+   
    System.out.println("Goodbye!"+NumReC);
    System.out.println("Menu:\nOutlook: Sunny=S Overcast=O Rain=R\tTemperature: Hot=H Mild=M Cool=C\n");
    System.out.println("Humidity: Peak=P Normal=N\t\tWindy: True=T False=F\n\nYour input should belong to one of these classes.\n");
    System.out.println("class1: Play=P   class2:Not Play=NP");
-   
-   
-    int d1[]=Count_classVL(class1,NumReC,"P");  
-    for(int i=0;i<NumReC;++i){
-            BigInteger G = g.pow(d1[i]);
-            BigInteger M = Xsum[4].pow(y[i][4]);
-            m[i]=G.multiply(M);
-           //System.out.println("\nd1"+d1[i]+M);
-            h[i]=Ysum[4].pow(x[i][4]);
-          //  System.out.println("\n----\ngg " +g +" \nXsum "+Ysum[4]+"\nh[i] "+h[i]+"\nm[i] "+m[i]);
-        } 
-
-    NumPlay= (double) Decryption(m,h,g,NumReC);
-    NumNoPlay= NumReC-NumPlay;
-    pp=  (double) NumPlay/NumReC;
-    npp= (double) NumNoPlay/NumReC;
-    System.out.println("\nGGGGGGGGGG "+NumNoPlay+"\n"+g.pow(9)+"pp/ "+npp);
- 
-    Scanner scr=new Scanner(System.in);
+   Scanner scr=new Scanner(System.in);
     System.out.println("\nEnter your input: example. t={rain,hot,peak,false} input will be R,H,P,F"); 
-    //System.out.println("Table\n");
-    //System.out.println("Outlook\t   Temperature\t    Humidity\t      Windy     \tClass");
-
-/*for(int i=0;i<14;++i)
-{
-System.out.print(outlook[i]+"\t\t"+temperature[i]+"\t\t"+humidity[i]+"\t\t"+windy[i]+"\t\t"+class1[i]);
-System.out.println();
-}*/
     String ch;
-    String l[]= new String[9];
-    l[0]=scr.nextLine();
-    l[1]=scr.nextLine();
-    l[2]=scr.nextLine();
-    l[3]=scr.nextLine();
-//System.out.println("ab"+ l[0]+l[1]+l[2]+l[3]);
+    String S[]= new String[9];
+    for(int i=0;i<4;++i){
+        System.out.println("Nhap gia trị "+(i+1));
+        S[i]=scr.nextLine();
+    }
+    
+   
+    int d1[]=Count_classVL(class1,"P",NumReC);  
+    DTBplay= Count_D(tableDB,S,"P",5,NumReC);  
+    DTBnoplay= Count_D(tableDB,S,"N",5,NumReC); 
+    m0= EcryptionDM(DTBplay,Xsum,y,g,5,NumReC);
+    h0= EcryptionDH(DTBplay,Ysum,x,g,5,NumReC);
+    CountDPlay = DecryptionHM(m0,h0,g,5,NumReC);
+    
+    m1= EcryptionDM(DTBnoplay,Xsum,y,g,5,NumReC);
+    h1= EcryptionDH(DTBnoplay,Ysum,x,g,5,NumReC);
+    CountDnoPlay = DecryptionHM(m1,h1,g,5,NumReC);
+    
+    for(int i=0;i<14;++i)
+    {
+        for(int j=0;j<5;++j)
+        {
+            //System.out.println("h[ "+i+j+ "] "+DTBplay[i][j] );
+            System.out.print("\td "+DTBplay[i][j] );
+        }
+        System.out.println();
+    }
+    
+    //--------------------
 
-    int count=0;
+    NumPlay= (double) CountDPlay[4];
+    NumNoPlay= (double) CountDnoPlay[4];
+    pp= (double) NumPlay/NumReC;
+    npp=(double) NumNoPlay/NumReC;
+   
     for(int i=0;i<4;++i){
         
-        ch=l[i];
-        prob[count][0]=cal_play_prob(ch);
-        prob[count][1]=cal_noplay_prob(ch);
-        System.out.println(" count="+count + "  ky tu =" + ch + "  prob[" + count + "][0]=" + prob[count][0] + "  prob[i][1]=" + prob[count][1] );
-        ++count;
+        
+        prob[i][0]=CountDPlay[i]/NumPlay;
+        prob[i][1]=CountDnoPlay[i]/NumNoPlay;
+        System.out.println(" count99="+i + "  ky tu99 =" + CountDPlay[i] + "  prob99[" + i + "][0]=" + prob1[i][0] + "  prob99[i][1]=" + prob1[i][1] );
+       
+        
     }
-  
+
     cal_N(1);
     cal_N(2);
 
@@ -215,6 +212,100 @@ System.out.println();
 
 }
 
+static BigInteger [][] EcryptionDM(int d[][],BigInteger Xsum[],int y[][],BigInteger g,int cl,int n){
+    BigInteger[][] m= new BigInteger [n][cl];
+    for(int i=0;i<5;++i){
+        for(int j=0;j<14;++j){
+                BigInteger G = g.pow(d[j][i]);
+                BigInteger M = Xsum[i].pow(y[j][i]);
+                m[j][i]=G.multiply(M);
+               //System.out.println("\nd1"+d1[i]+M);
+      //        System.out.println("\n----\ngg " +g +" \nXsum "+Xsum[i]+"\nm[i] "+m[j][i]);
+            } 
+    }
+    return m;
+}
+
+static BigInteger [][] EcryptionDH(int d[][],BigInteger Ysum[],int x[][],BigInteger g,int cl,int n){
+    BigInteger[][] h= new BigInteger [n][cl];
+    for(int i=0;i<cl;++i){
+        for(int j=0;j<14;++j){
+
+              //  h[i]=Ysum[4].pow(x[i][4]);
+                h[j][i]=Ysum[i].pow(x[j][i]);//System.out.println("\nd1"+d1[i]+M);
+          //    System.out.println("\n----\nhhhh " +h[j][i]);
+            } 
+    }
+    return h;
+}
+
+public static int [] DecryptionHM (BigInteger m[][],BigInteger h[][] ,BigInteger g,int cl,int n){
+    BigInteger[] r = new BigInteger[cl];
+    BigInteger[] r1 = new BigInteger[cl];
+    r= DefaultONE(r,cl);
+    r1 = DefaultONE(r1,cl);
+    int[] KG= new int [cl];
+    for(int i=0;i<cl;++i)
+    {
+        for(int j=0;j<n;++j)
+        {
+           r[i]=r[i].multiply(m[j][i]);
+           r1[i]=r1[i].multiply(h[j][i]);
+        }
+        r[i]=r[i].divide(r1[i]);
+      //  System.out.println("\nKET QUa TINH "+r[i]+"\n"+g.pow(3)+"\n"+g.pow(2)+"\n"+g.pow(3)+"\n"+g.pow(6));
+        for(int j=0;j<n;++j)
+        {    
+            if (r[i].equals(g.pow(j))) 
+            {
+                KG[i]=j;
+          //      System.out.println("KG "+KG[i]+"i "+i+"j"+j);
+                break;
+            }
+        }
+    }
+    return KG;
+}
+
+
+static int [] Count_classVL(String a[],String b,int n)
+{
+    int d1[]= new int [n];
+    for(int i=0;i<n;++i)
+    {
+    if(a[i].equals(b))
+    { 
+        d1[i]=1;
+    }
+    else d1[i]=0;
+   // System.out.println("\ndi "+ d[i][0]);
+    }
+    return d1;
+}
+
+static int [][] Count_D(String tableDB[][],String stadin[],String b,int column,int num){
+    int d[][]= new int [num][column];
+    
+    for(int j=0;j<num;++j)
+    {
+        for(int i=0;i<column-1;++i)
+        {
+            
+            if(tableDB[j][i].equals(stadin[i]) && tableDB[j][column-1].equals(b))
+            {
+                d[j][i]=1;
+            }
+            else d[j][i]=0;
+            if(tableDB[j][column-1].equals(b))
+                {
+                d[j][column-1]=1;
+                }
+            else d[j][column-1]=0;
+        }
+    }
+    return d;
+}
+
 static void cal_N(int a)
 {
   if(a==1)
@@ -235,24 +326,7 @@ static void cal_N(int a)
   }
 }
 
-static int [] Count_classVL(String a[],int n,String b)
-{
-    int d1[]= new int [n];
-    for(int i=0;i<n;++i)
-    {
-    
-    if(a[i].equals(b))
-    {
-        
-        d1[i]=1;
-    }
-    else d1[i]=0;
-   // System.out.println("\ndi "+ d[i][0]);
-    }
-    return d1;
-}
-
-static double cal_play_prob(String ch){
+/*static double cal_play_prob(String ch){
     double prob=0;
     double count=0;
 
@@ -302,14 +376,14 @@ static double cal_play_prob(String ch){
         prob=count/NumPlay;
     }
     return prob;
-}
+}*/
 
 
 
 
 
 
-static double cal_noplay_prob(String ch){
+/*static double cal_noplay_prob(String ch){
     
     double prob=0;
     double count=0;
@@ -352,7 +426,7 @@ static double cal_noplay_prob(String ch){
         prob=count/NumNoPlay;
     }
 return prob;
-}
+} */
 
 public static int RandomInt (int n){
          Random rnd1 = new Random();   
@@ -370,7 +444,9 @@ public static BigInteger RandomBigInt (int a){
          }while ( b.compareTo(new BigInteger("2")) < 0);
          return b;
      }
+
 public static BigInteger[] DefaultONE (BigInteger a[],int n){
+    a = new BigInteger[n];
     for(int i=0;i<n;++i){
         a[i]= new BigInteger("1");
     }
@@ -398,26 +474,5 @@ public static int Decryption (BigInteger m[],BigInteger h[] ,BigInteger g,int n)
     }
     return i;
 }
-
-
-/*public static BigInteger[] Encryptione_m_Bayes (int d[],int n,BigInteger Xsum,int y[],BigInteger g ){
-    BigInteger m[]= new BigInteger[n];
-    for(int i=0;i<n;++i){
-           BigInteger G = g.pow(d[i]);
-           BigInteger M = Xsum.pow(y[i]);
-            m[i]=G.multiply(M);
-        }
-    
-    return m;
-} */
-
-/*public static BigInteger[] Encryptione_h_Bayes (int a[],int n){
-    
-    for(int i=0;i<3;++i){
-            h[i]=Ysum.pow(x[i]);
-        }
-    
-    return a;
-} */
 
 }
