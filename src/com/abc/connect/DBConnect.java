@@ -28,6 +28,17 @@ public class DBConnect {
             
         return con;
     }
+    public static Connection openConnection(String user, String pass){
+        Connection con = null;
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+                con = DriverManager.getConnection("jdbc:mysql://192.168.124.99/KMA", user, pass);
+            } catch (Exception e) {
+                Logger.getLogger(DBConnect.class.getName()).log(Level.SEVERE,null,e);
+            }
+            
+        return con;
+    }
     public static void closeAll(Connection con, PreparedStatement ps, ResultSet rs){
         try {
             if (rs != null)

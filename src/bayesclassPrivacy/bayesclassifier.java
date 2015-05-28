@@ -1,7 +1,9 @@
-package aa;
+package bayesclassPrivacy;
+
+import com.abc.connect.DBConnect;
+import com.abc.dao.tadDAO;
 import java.util.*;
 import java.sql.*;
-import java.math.*;
 import java.math.BigInteger;
 
 class bayesclassifier
@@ -65,22 +67,18 @@ public static void main(String args[]){
     Connection conn = null;
     Statement stmt = null;
     NumColumn=5;
-    Xsum=DefaultONE(Xsum,NumColumn);
-    Ysum=DefaultONE(Ysum,NumColumn);
-    g=RandomBigInt(3);
+    Xsum=Crypto.DefaultONE(Xsum,NumColumn);
+    Ysum=Crypto.DefaultONE(Ysum,NumColumn);
+    g=Crypto.RandomBigInt(3);
     
 
    
   
    try{
       //STEP 2: Register JDBC driver
-      Class.forName("com.mysql.jdbc.Driver");
-      System.out.println("Connecting to database...");
-      conn = DriverManager.getConnection(DB_URL,USER,PASS);
-      System.out.println("Creating statement...");
-      stmt = conn.createStatement();
-      //for(int i=0;i<99;++i){
-      ResultSet rs = stmt.executeQuery("SELECT * FROM bayes");
+     
+      conn = DBConnect.openConnection("tad","123456");
+      ResultSet rs = tadDAO.ListRs();
       //STEP 5: Extract data from result set
       System.out.println("Table\n");
       System.out.println("ID\t   Outlook\t   Temperature\t    Humidity\t      Windy     \tClass");
@@ -88,8 +86,8 @@ public static void main(String args[]){
       while(rs.next()){
          //Retrieve by column name
          for(int i=0;i<5;++i){
-             x[countU][i]=RandomInt(64);
-             y[countU][i]=RandomInt(64);
+             x[countU][i]=Crypto.RandomInt(5);
+             y[countU][i]=Crypto.RandomInt(5);
              X[countU][i]=g.pow(x[countU][i]);
              Y[countU][i]=g.pow(y[countU][i]);
              Xsum[i]= Xsum[i].multiply(X[countU][i]);
@@ -110,7 +108,7 @@ public static void main(String args[]){
       //STEP 6: Clean-up environment
       rs.close();
    //}
-      stmt.close();
+
       conn.close();
    }catch(SQLException se){
       //Handle errors for JDBC
@@ -154,13 +152,13 @@ public static void main(String args[]){
     int d1[]=Count_classVL(class1,"P",NumReC);  
     DTBplay= Count_D(tableDB,S,"P",5,NumReC);  
     DTBnoplay= Count_D(tableDB,S,"N",5,NumReC); 
-    m0= EcryptionDM(DTBplay,Xsum,y,g,5,NumReC);
-    h0= EcryptionDH(DTBplay,Ysum,x,g,5,NumReC);
-    CountDPlay = DecryptionHM(m0,h0,g,5,NumReC);
+    m0= Crypto.EcryptionDM(DTBplay,Xsum,y,g,5,NumReC);
+    h0= Crypto.EcryptionDH(DTBplay,Ysum,x,g,5,NumReC);
+    CountDPlay = Crypto.DecryptionHM(m0,h0,g,5,NumReC);
     
-    m1= EcryptionDM(DTBnoplay,Xsum,y,g,5,NumReC);
-    h1= EcryptionDH(DTBnoplay,Ysum,x,g,5,NumReC);
-    CountDnoPlay = DecryptionHM(m1,h1,g,5,NumReC);
+    m1= Crypto.EcryptionDM(DTBnoplay,Xsum,y,g,5,NumReC);
+    h1= Crypto.EcryptionDH(DTBnoplay,Ysum,x,g,5,NumReC);
+    CountDnoPlay = Crypto.DecryptionHM(m1,h1,g,5,NumReC);
     
     for(int i=0;i<14;++i)
     {
@@ -212,60 +210,6 @@ public static void main(String args[]){
 
 }
 
-static BigInteger [][] EcryptionDM(int d[][],BigInteger Xsum[],int y[][],BigInteger g,int cl,int n){
-    BigInteger[][] m= new BigInteger [n][cl];
-    for(int i=0;i<5;++i){
-        for(int j=0;j<14;++j){
-                BigInteger G = g.pow(d[j][i]);
-                BigInteger M = Xsum[i].pow(y[j][i]);
-                m[j][i]=G.multiply(M);
-               //System.out.println("\nd1"+d1[i]+M);
-      //        System.out.println("\n----\ngg " +g +" \nXsum "+Xsum[i]+"\nm[i] "+m[j][i]);
-            } 
-    }
-    return m;
-}
-
-static BigInteger [][] EcryptionDH(int d[][],BigInteger Ysum[],int x[][],BigInteger g,int cl,int n){
-    BigInteger[][] h= new BigInteger [n][cl];
-    for(int i=0;i<cl;++i){
-        for(int j=0;j<14;++j){
-
-              //  h[i]=Ysum[4].pow(x[i][4]);
-                h[j][i]=Ysum[i].pow(x[j][i]);//System.out.println("\nd1"+d1[i]+M);
-          //    System.out.println("\n----\nhhhh " +h[j][i]);
-            } 
-    }
-    return h;
-}
-
-public static int [] DecryptionHM (BigInteger m[][],BigInteger h[][] ,BigInteger g,int cl,int n){
-    BigInteger[] r = new BigInteger[cl];
-    BigInteger[] r1 = new BigInteger[cl];
-    r= DefaultONE(r,cl);
-    r1 = DefaultONE(r1,cl);
-    int[] KG= new int [cl];
-    for(int i=0;i<cl;++i)
-    {
-        for(int j=0;j<n;++j)
-        {
-           r[i]=r[i].multiply(m[j][i]);
-           r1[i]=r1[i].multiply(h[j][i]);
-        }
-        r[i]=r[i].divide(r1[i]);
-      //  System.out.println("\nKET QUa TINH "+r[i]+"\n"+g.pow(3)+"\n"+g.pow(2)+"\n"+g.pow(3)+"\n"+g.pow(6));
-        for(int j=0;j<n;++j)
-        {    
-            if (r[i].equals(g.pow(j))) 
-            {
-                KG[i]=j;
-          //      System.out.println("KG "+KG[i]+"i "+i+"j"+j);
-                break;
-            }
-        }
-    }
-    return KG;
-}
 
 
 static int [] Count_classVL(String a[],String b,int n)
@@ -326,153 +270,7 @@ static void cal_N(int a)
   }
 }
 
-/*static double cal_play_prob(String ch){
-    double prob=0;
-    double count=0;
 
 
-    if(flag==0){
-        
-        for(int i=0;i<NumReC;++i){
-    
-            if(outlook[i].equals(ch) && class1[i].equals("P"))
-            {
-                ++count;
-                d[i][flag]=1;
-            }
-            else d[i][flag]=0;
-   // System.out.println("\ndi "+ d[i][0]);
-        }
-
-        prob=count/NumPlay;
-
-    
-
-        flag=1;
-    }
-    else if(flag==1){
-        for(int i=0;i<NumReC;++i)
-        if(temperature[i].equals(ch) && class1[i].equals("P"))
-        ++count;
-
-        prob=count/NumPlay;
-
-        flag=2;
-    }
-    else if(flag==2){       
-        for(int i=0;i<NumReC;++i)
-        if(humidity[i].equals(ch) && class1[i].equals("P"))
-        ++count;
-        prob=count/NumPlay;
-
-        flag=3;
-    }
-    else
-    if(flag==3){
-        for(int i=0;i<NumReC;++i)
-        if(windy[i].equals(ch) && class1[i].equals("P"))
-        ++count;
-
-        prob=count/NumPlay;
-    }
-    return prob;
-}*/
-
-
-
-
-
-
-/*static double cal_noplay_prob(String ch){
-    
-    double prob=0;
-    double count=0;
-
-    if(flag1==0)
-    {
-        for(int i=0;i<NumReC;++i)
-        if(outlook[i].equals(ch) && class1[i].equals("N"))
-        ++count;
-
-        prob=count/NumNoPlay;
-
-        flag1=1;
-    }
-    else if(flag1==1){
-        for(int i=0;i<NumReC;++i)
-        if(temperature[i].equals(ch) && class1[i].equals("N"))
-        ++count;
-
-        prob=count/NumNoPlay;
-
-        flag1=2;
-    }
-    else if(flag1==2){
-        
-        for(int i=0;i<NumReC;++i)
-        if(humidity[i].equals(ch) && class1[i].equals("N"))
-        ++count;
-
-        prob=count/NumNoPlay;
-
-        flag1=3;
-    }
-    else
-    if(flag1==3){
-        for(int i=0;i<NumReC;++i)
-        if(windy[i].equals(ch) && class1[i].equals("N"))
-        ++count;
-
-        prob=count/NumNoPlay;
-    }
-return prob;
-} */
-
-public static int RandomInt (int n){
-         Random rnd1 = new Random();   
-         int rnd = rnd1.nextInt(n) +1 ;
-         
-         return rnd;
-         
-     }
-
-public static BigInteger RandomBigInt (int a){
-         //int a[][]= new int[n][];
-         BigInteger b;
-         do{
-             b = new BigInteger(a, new Random());
-         }while ( b.compareTo(new BigInteger("2")) < 0);
-         return b;
-     }
-
-public static BigInteger[] DefaultONE (BigInteger a[],int n){
-    a = new BigInteger[n];
-    for(int i=0;i<n;++i){
-        a[i]= new BigInteger("1");
-    }
-    
-    return a;
-}
-
-public static int Decryption (BigInteger m[],BigInteger h[] ,BigInteger g,int n){
-    BigInteger r = new BigInteger("1");
-    BigInteger r1 = new BigInteger("1");
-    int i=0;
-    for( i=0;i<n;++i)
-    {
-       r=r.multiply(m[i]);
-       r1=r1.multiply(h[i]);
-    }
-    r=r.divide(r1);
-    System.out.println("\nRRRRRRRRRRRRRRR "+r+"\n"+g.pow(9));
-    for( i=0;i<n;++i)
-    {  
-        if (r.equals(g.pow(i))) 
-        {
-            break;
-        }
-    }
-    return i;
-}
 
 }

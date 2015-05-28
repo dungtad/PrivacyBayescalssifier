@@ -3,13 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/TAD/Documents/NetBeansProjects/AA/src/aa/Main.java</file>
-            <file>file:/C:/Users/TAD/Documents/NetBeansProjects/AA/src/aa/DBConnect.java</file>
-            <file>file:/C:/Users/TAD/Documents/NetBeansProjects/AA/src/aa/bayesclassifier.java</file>
-            <file>file:/C:/Users/TAD/Documents/NetBeansProjects/AA/src/aa/KeyGENERATOR.java</file>
-            <file>file:/C:/Users/TAD/Documents/NetBeansProjects/AA/src/aa/tadDAO.java</file>
-            <file>file:/C:/Users/TAD/Documents/NetBeansProjects/AA/src/aa/abctesst.java</file>
-            <file>file:/C:/Users/TAD/Documents/NetBeansProjects/AA/src/aa/tad.java</file>
+            <file>file:/C:/Users/TAD/Documents/NetBeansProjects/PrivacyBayescalssifier/src/bayesclassPrivacy/bayesclassifier.java</file>
+            <file>file:/C:/Users/TAD/Documents/NetBeansProjects/PrivacyBayescalssifier/src/bayesclassPrivacy/Crypto.java</file>
+            <file>file:/C:/Users/TAD/Documents/NetBeansProjects/PrivacyBayescalssifier/src/bayesclassPrivacy/Bayesian.java</file>
+            <file>file:/C:/Users/TAD/Documents/NetBeansProjects/PrivacyBayescalssifier/src/ConnectDB/tadDAO.java</file>
+            <file>file:/C:/Users/TAD/Documents/NetBeansProjects/PrivacyBayescalssifier/src/bayesclassPrivacy/OUI.java</file>
+            <file>file:/C:/Users/TAD/Documents/NetBeansProjects/PrivacyBayescalssifier/src/bayesclassPrivacy/Main.java</file>
+            <file>file:/C:/Users/TAD/Documents/NetBeansProjects/PrivacyBayescalssifier/src/ConnectDB/DBConnect.java</file>
         </group>
     </open-files>
 </project-private>
