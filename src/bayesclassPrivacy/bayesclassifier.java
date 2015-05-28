@@ -1,7 +1,7 @@
 package bayesclassPrivacy;
 
-import com.abc.connect.DBConnect;
-import com.abc.dao.tadDAO;
+import DBConnection.DBConnect;
+import DBConnection.tadDAO;
 import java.util.*;
 import java.sql.*;
 import java.math.BigInteger;

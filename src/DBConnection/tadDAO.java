@@ -2,9 +2,8 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.abc.dao;
-import com.abc.connect.DBConnect;
-import com.abc.entity.tad;
+package DBConnection;
+import DBConnection.DBConnect;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -49,7 +48,7 @@ public class tadDAO {
         return list;
     }
     public static ResultSet ListRs() {
-        List<tad> list = new ArrayList<tad>();
+       // List<tad> list = new ArrayList<tad>();
 
         Connection con = null;
         PreparedStatement ps = null;
