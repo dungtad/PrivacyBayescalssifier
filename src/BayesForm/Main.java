@@ -4,6 +4,7 @@
  */
 package BayesForm;
 
+import bayesclassPrivacy.*;
 import bayesclassPrivacy.Crypto;
 import bayesclassPrivacy.Bayesian;
 import DBConnection.DBConnect;
@@ -410,6 +411,7 @@ public class Main extends javax.swing.JFrame {
                 try {
                     //STEP 2: Register JDBC driver
 
+                  
                     //            conn = DBConnect.openConnection("tad", "123456");
                     ResultSet rs = tadDAO.ListRs();
                     //STEP 5: Extract data from result set
@@ -490,10 +492,62 @@ public class Main extends javax.swing.JFrame {
             System.out.println("Nhap gia trị "+jTextField1.getText()+ jTextField2.getText()+jTextField3.getText()+jTextField4.getText());
             
             //count class P and N
-            //DTBplay = Bayesian.Count_D(tableDB, S, "P", NumColumn, NumReC);
-           // DTBnoplay = Bayesian.Count_D(tableDB, S, "N", NumColumn, NumReC);
-        
-            
+            DTBplay = Bayesian.Count_D(tableDB, S, "P", NumColumn, NumReC);
+            DTBnoplay = Bayesian.Count_D(tableDB, S, "N", NumColumn, NumReC);
+            Result_TextArea.setText(g.bitCount()+"");
+            // Encrypt with class = Play
+            m0 = Crypto.EcryptionDM(DTBplay, Xsum, y, g, NumColumn, NumReC);
+            h0 = Crypto.EcryptionDH(DTBplay, Ysum, x, g, NumColumn, NumReC);
+            CountDPlay = Crypto.DecryptionHM(m0, h0, g, NumColumn, NumReC);
+
+            //Encrypt with class = No
+            m1 = Crypto.EcryptionDM(DTBnoplay, Xsum, y, g, NumColumn, NumReC);
+            h1 = Crypto.EcryptionDH(DTBnoplay, Ysum, x, g, NumColumn, NumReC);
+            CountDnoPlay = Crypto.DecryptionHM(m1, h1, g, NumColumn, NumReC);
+
+            for (int i = 0; i < 14; ++i) {
+                for (int j = 0; j < 5; ++j) {
+                    //System.out.println("h[ "+i+j+ "] "+DTBplay[i][j] );
+                    System.out.print("\nm " + m0[i][j]);
+                }
+                System.out.println();
+            }
+
+            //--------------------
+
+            NumPlay = (double) CountDPlay[4];
+            NumNoPlay = (double) CountDnoPlay[4];
+            pp = (double) NumPlay / NumReC;
+            npp = (double) NumNoPlay / NumReC;
+
+            for (int i = 0; i < 4; ++i) {
+
+                prob[i][0] = CountDPlay[i] / NumPlay;
+                prob[i][1] = CountDnoPlay[i] / NumNoPlay;
+                System.out.println(" count99=" + i + "  ky tu99 =" + CountDPlay[i] + "  prob99[" + i + "][0]=" + prob[i][0] + "  prob99[i][1]=" + prob[i][1]);
+
+            }
+
+            cal_N(1);
+            cal_N(2);
+
+            double pt = play_N + notplay_N;
+            System.out.println("play_N+notplay_N :" + play_N + "+" + notplay_N);
+            System.out.println("pt =" + pt);
+            double prob_of_play = 0;
+            double prob_of_noplay = 0;
+
+            prob_of_play = play_N / pt;
+            prob_of_noplay = notplay_N / pt;
+
+            System.out.println("\nProbability of play " + prob_of_play);
+            System.out.println("\nProbability of NO play " + prob_of_noplay);
+
+            if (prob_of_play > prob_of_noplay) {
+                System.out.println("\nThe new tuple classified under \"PLAY\" category.Hence there will be play!!!");
+            } else {
+                System.out.println("\nThe new tuple classified under \"NO PLAY\" category.Hence there will be NO play.");
+            }
 
         }
 
