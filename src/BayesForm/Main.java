@@ -300,10 +300,21 @@ public class Main extends javax.swing.JFrame {
                 System.out.println("\nEnter your input: example. t={rain,hot,peak,false} input will be R,H,P,F");
                 String ch;
                 String S[] = new String[9];
+
                 for (int i = 0; i < 4; ++i) {
                     System.out.println("Nhap gia trị " + (i + 1));
                     S[i] = scr.nextLine();
                 }
+
+                /*for (int i = 0; i < 4; ++i) {
+                    System.out.println("Nhap gia trị " + (i + 1));
+                    S[i] = scr.nextLine();
+                }*/
+                S[0]=jTextField1.getText();
+                S[1]=jTextField2.getText();
+                S[2]=jTextField3.getText();
+                S[3]=jTextField4.getText();
+
 
 
                 int d1[] = Count_classVL(class1, "P", NumReC);
