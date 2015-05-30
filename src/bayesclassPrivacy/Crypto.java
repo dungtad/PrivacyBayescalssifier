@@ -13,8 +13,8 @@ public class Crypto {
     
     public static BigInteger [][] EcryptionDM(int d[][],BigInteger Xsum[],int y[][],BigInteger g,int cl,int n){
     BigInteger[][] m= new BigInteger [n][cl];
-    for(int i=0;i<5;++i){
-        for(int j=0;j<14;++j){
+    for(int i=0;i<cl;++i){
+        for(int j=0;j<n;++j){
                 BigInteger G = g.pow(d[j][i]);
                 BigInteger M = Xsum[i].pow(y[j][i]);
                 m[j][i]=G.multiply(M);
@@ -28,7 +28,7 @@ public class Crypto {
 public static BigInteger [][] EcryptionDH(int d[][],BigInteger Ysum[],int x[][],BigInteger g,int cl,int n){
     BigInteger[][] h= new BigInteger [n][cl];
     for(int i=0;i<cl;++i){
-        for(int j=0;j<14;++j){
+        for(int j=0;j<n;++j){
 
               //  h[i]=Ysum[4].pow(x[i][4]);
                 h[j][i]=Ysum[i].pow(x[j][i]);//System.out.println("\nd1"+d1[i]+M);

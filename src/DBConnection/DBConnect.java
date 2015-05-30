@@ -21,7 +21,7 @@ public class DBConnect {
         Connection con = null;
             try {
                 Class.forName("com.mysql.jdbc.Driver");
-                con = DriverManager.getConnection("jdbc:mysql://192.168.124.99/KMA", "tad", "123456");
+                con = DriverManager.getConnection("jdbc:mysql://192.168.124.99/TAD", "tad", "123456");
             } catch (Exception e) {
                 Logger.getLogger(DBConnect.class.getName()).log(Level.SEVERE,null,e);
             }
@@ -32,7 +32,7 @@ public class DBConnect {
         Connection con = null;
             try {
                 Class.forName("com.mysql.jdbc.Driver");
-                con = DriverManager.getConnection("jdbc:mysql://192.168.124.99/KMA", user, pass);
+                con = DriverManager.getConnection("jdbc:mysql://192.168.124.99/TAD", user, pass);
             } catch (Exception e) {
                 Logger.getLogger(DBConnect.class.getName()).log(Level.SEVERE,null,e);
             }

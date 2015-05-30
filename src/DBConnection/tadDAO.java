@@ -26,7 +26,7 @@ public class tadDAO {
 
         try {
             con = DBConnect.openConnection();
-            ps = con.prepareStatement("SELECT * FROM bayes");
+            ps = con.prepareStatement("SELECT * FROM bayes LIMIT 14");
 
             rs = ps.executeQuery();
             while (rs.next()) {
@@ -56,7 +56,7 @@ public class tadDAO {
 
         try {
             con = DBConnect.openConnection();
-            ps = con.prepareStatement("SELECT * FROM bayes");
+            ps = con.prepareStatement("SELECT * FROM bayes LIMIT 14");
 
             rs = ps.executeQuery();
 //            while (rs.next()) {
