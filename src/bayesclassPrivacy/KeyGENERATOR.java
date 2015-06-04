@@ -27,9 +27,9 @@ public class KeyGENERATOR {
     
     //static BigInteger x[]=new BigInteger[4];
     //static BigInteger y[]=new BigInteger[4];
-    static int x[]={3,1,1};
-    static int y[]={8,4,1};
-    static int d[]={1,0,1};
+    static int x[]={3,7,7};
+    static int y[]={5,7,3};
+    static int d[]={1,1,1};
     
     
     static BigInteger X[]=new BigInteger[4];
@@ -74,59 +74,52 @@ public class KeyGENERATOR {
         
         //BigInteger x[]=new BigInteger[3];
        //BigInteger g = new BigInteger(9, new Random());
-        abctesst rsa1 = new abctesst();
+
         //int j[]= new int[255];
-        int j[]= rsa1.RandomArray(255);
-        for(int i=1;i<99;++i)
-        {
-        
-        System.out.println("rnd3= "+j[i]);
-        }
-        int[] k = ast(x);
+     
+       
         BigInteger g = new BigInteger("9");
         Random rnd1 = new Random();
         P = BigInteger.probablePrime(10,rnd1);
+        P = new BigInteger("17");
         System.out.println("g= "+g+"\tP"+P);
         for(int i=0;i<3;++i)
         {
             //x[i] = new BigInteger(9, new Random());
             //y[i] = new BigInteger(9, new Random());
-            X[i] = g.pow(x[i]);
-            Y[i] = g.pow(y[i]);
+            X[i] = g.pow(x[i]).mod(P);
+            Y[i] = g.pow(y[i]).mod(P);
             Xsum= Xsum.multiply(X[i]);
             Ysum= Ysum.multiply(Y[i]);
             System.out.println("\n----\nx " +x[i] +" \ny "+y[i]+"\nX "+X[i]+"\nY "+Y[i]+"\nXsum "+Xsum+"\nYsum= "+Ysum);
         }
+        Xsum= Xsum.mod(P);
+        Ysum= Ysum.mod(P);
         for(int i=0;i<3;++i){
             G = g.pow(d[i]);
-            M = Xsum.pow(y[i]);
-            m[i]=G.multiply(M);
-           // m[i]=m1[i].mod(P);
-            h[i]=Ysum.pow(x[i]);
+            M = Xsum.pow(y[i]).mod(P);
+            m[i]=(G.multiply(M)).mod(P) ;
+
+            h[i]=Ysum.pow(x[i]).mod(P);
             System.out.println("\n----\nG " +G +" \nM "+M+"\nm[i] "+m[i]+"\nh[i] "+h[i]);
         }
     //BigInteger result = new BigInteger(n.bitLength(), new Random());
-        r1=m[0].multiply(m[1].multiply(m[2]));
-        r2=h[0].multiply(h[1].multiply(h[2]));
-        r= r1.divide(r2);
-        //r= (m[0].multiply(m[1].multiply(m[2]))).divide(h[0].multiply(h[1].multiply(h[2]))) ;
-        //r1=r.mod(P);
-        System.out.println("\n-ketqua---\nr1 "+ r1 +"\nr2 "+ r2+  " \nr "+ r +"ket qua"+ g.pow(2) );
-        /*
-        int max = 800;
-        for(int i=0;i<99;++i){
-            Random rnd1 = new Random();
-            
-            int i1 = rnd1.nextInt(max) ;
-            //do{
-            BigInteger  bigrnd = new BigInteger(8, new Random());   
-            do {
-        E = new BigInteger(8, new Random());
-        System.out.println("pr  " + E );
-        } while (E.compareTo(BigInteger.ZERO) < 0);
-            System.out.println("pri "big= " + E);
-        }
-        */
+        r1= ( m[0].multiply(m[1].multiply(m[2])) ).mod(P) ;
+        r2= ( h[0].multiply(h[1].multiply(h[2])) ).mod(P) ;
+        r2=r2.modInverse(P);
+        r= (r1.multiply(r2)).mod(P);
+
+        System.out.println("\n-ketqua---\nr1 "+ r1 +"\nr2 "+ r2+  " \nr "+ r +"ket qua"+ g.pow(3).mod(P) );
+       
+        
+         BigInteger a1=new BigInteger("8");
+         BigInteger a2=new BigInteger("4294967296");
+         BigInteger b1= new BigInteger("4294967296");
+         BigInteger c = (a1.multiply(a2)).mod(P);
+         BigInteger d = b1.mod(P);
+         b1=d.modInverse(P);
+          BigInteger cc = (c.multiply(b1)).mod(P);
+          System.out.println("\n-ketquaccc" + cc);
                 
     }
     

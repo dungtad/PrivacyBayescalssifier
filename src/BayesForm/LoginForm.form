@@ -49,9 +49,9 @@
                               <EmptySpace max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                   <Component id="User_TextField" pref="207" max="32767" attributes="0"/>
-                                  <Component id="Pass_TextField" alignment="1" max="32767" attributes="0"/>
                                   <Component id="DB_TextField" alignment="1" max="32767" attributes="0"/>
                                   <Component id="Table_TextField" alignment="1" max="32767" attributes="0"/>
+                                  <Component id="PasswordField" alignment="0" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -85,11 +85,11 @@
                   <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="Pass_TextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+                  <Component id="PasswordField" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="DB_TextField" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -99,7 +99,7 @@
                   <Component id="Table_TextField" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="26" max="32767" attributes="0"/>
+              <EmptySpace pref="23" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="Default_Button" alignment="3" min="-2" pref="36" max="-2" attributes="0"/>
                   <Component id="Login_Button" alignment="3" min="-2" pref="36" max="-2" attributes="0"/>
@@ -112,8 +112,6 @@
   </Layout>
   <SubComponents>
     <Component class="javax.swing.JTextField" name="User_TextField">
-    </Component>
-    <Component class="javax.swing.JTextField" name="Pass_TextField">
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel1">
       <Properties>
@@ -181,6 +179,8 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="Reset_ButtonActionPerformed"/>
       </Events>
+    </Component>
+    <Component class="javax.swing.JPasswordField" name="PasswordField">
     </Component>
   </SubComponents>
 </Form>

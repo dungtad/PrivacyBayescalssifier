@@ -32,7 +32,6 @@ public class LoginForm extends javax.swing.JFrame {
     private void initComponents() {
 
         User_TextField = new javax.swing.JTextField();
-        Pass_TextField = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         Login_Button = new javax.swing.JButton();
@@ -45,6 +44,7 @@ public class LoginForm extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         Default_Button = new javax.swing.JButton();
         Reset_Button = new javax.swing.JButton();
+        PasswordField = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -110,9 +110,9 @@ public class LoginForm extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(User_TextField, javax.swing.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
-                                    .addComponent(Pass_TextField, javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(DB_TextField, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(Table_TextField, javax.swing.GroupLayout.Alignment.TRAILING)))))
+                                    .addComponent(Table_TextField, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(PasswordField)))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(46, 46, 46)
                         .addComponent(Default_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -136,10 +136,10 @@ public class LoginForm extends javax.swing.JFrame {
                     .addComponent(User_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(Pass_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addGap(17, 17, 17)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel2)
+                    .addComponent(PasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(DB_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
@@ -147,7 +147,7 @@ public class LoginForm extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(Table_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(Default_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Login_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -160,7 +160,8 @@ public class LoginForm extends javax.swing.JFrame {
 
     private void Login_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Login_ButtonActionPerformed
         // TODO add your handling code here:
-        Connection con = DBConnect.openConnection(User_TextField.getText(), Pass_TextField.getText());
+        String SP = new String(PasswordField.getPassword());
+        Connection con = DBConnect.openConnection(User_TextField.getText(), SP);
         if (con == null) {
             JOptionPane.showMessageDialog(null, "wrong user or password");
         } else {
@@ -173,6 +174,7 @@ public class LoginForm extends javax.swing.JFrame {
         DB_TextField.setText("KMA");
         IP_TextField.setText("192.168.124.99");
         User_TextField.setText("");
+        PasswordField.setText("");
         Table_TextField.setText("bayes");
     }//GEN-LAST:event_Default_ButtonActionPerformed
 
@@ -181,8 +183,9 @@ public class LoginForm extends javax.swing.JFrame {
         DB_TextField.setText("");
         IP_TextField.setText("");
         User_TextField.setText("");
-        Pass_TextField.setText("");
+        PasswordField.setText("");
         Table_TextField.setText("");
+        
     }//GEN-LAST:event_Reset_ButtonActionPerformed
 
     /**
@@ -233,7 +236,7 @@ public class LoginForm extends javax.swing.JFrame {
     private javax.swing.JButton Default_Button;
     private javax.swing.JTextField IP_TextField;
     private javax.swing.JButton Login_Button;
-    private javax.swing.JTextField Pass_TextField;
+    private javax.swing.JPasswordField PasswordField;
     private javax.swing.JButton Reset_Button;
     private javax.swing.JTextField Table_TextField;
     private javax.swing.JTextField User_TextField;

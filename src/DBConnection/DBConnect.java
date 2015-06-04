@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author MANHKHUC
+ * @author TAD
  */
 public class DBConnect {
     public static Connection openConnection(){

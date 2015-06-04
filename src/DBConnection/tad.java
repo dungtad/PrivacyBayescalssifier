@@ -6,7 +6,7 @@ package DBConnection;
 
 /**
  *
- * @author MANHKHUC
+ * @author TAD
  */
 public class tad {
     private int _Id;

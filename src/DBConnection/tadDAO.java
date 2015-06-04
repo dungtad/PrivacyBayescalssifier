@@ -14,7 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 /**
  *
- * @author MANHKHUC
+ * @author TAD
  */
 public class tadDAO {
     public static List<tad> ListTad() {
