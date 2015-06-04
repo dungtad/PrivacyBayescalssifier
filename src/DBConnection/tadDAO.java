@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  * @author TAD
  */
 public class tadDAO {
-    public static List<tad> ListTad() {
+    public static List<tad> ListTad(String S) {
         List<tad> list = new ArrayList<tad>();
 
         Connection con = null;
@@ -26,7 +26,7 @@ public class tadDAO {
 
         try {
             con = DBConnect.openConnection();
-            ps = con.prepareStatement("SELECT * FROM bayes");
+            ps = con.prepareStatement(S);
 
             rs = ps.executeQuery();
             while (rs.next()) {
@@ -47,7 +47,7 @@ public class tadDAO {
 
         return list;
     }
-    public static ResultSet ListRs() {
+    public static ResultSet ListRs(String S) {
        // List<tad> list = new ArrayList<tad>();
 
         Connection con = null;
@@ -56,7 +56,7 @@ public class tadDAO {
 
         try {
             con = DBConnect.openConnection();
-            ps = con.prepareStatement("SELECT * FROM bayes");
+            ps = con.prepareStatement(S);
 
             rs = ps.executeQuery();
 //            while (rs.next()) {

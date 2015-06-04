@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package BayesForm;
 
 import bayesclassPrivacy.*;
@@ -30,20 +27,19 @@ public class Main extends javax.swing.JFrame {
     /**
      * Creates new form Main
      */
-    static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    static final String DB_URL = "jdbc:mysql://192.168.124.99/TAD";
+    static String SQL_Query;
+    
     //  Database credentials
-    static final String USER = "tad";
-    static final String PASS = "123456";
+ 
 
     static String tableDB[][] = new String[10000][5];
     static int[][] DTBplay, DTBnoplay;
     static int[] CountDPlay, CountDnoPlay;
-    static BigInteger x[][] = new BigInteger[10000][10];
-    static BigInteger y[][] = new BigInteger[10000][10];
+    static BigInteger x[][] = new BigInteger[10000][5];
+    static BigInteger y[][] = new BigInteger[10000][5];
     static BigInteger m[] = new BigInteger[100000];
     static BigInteger h[] = new BigInteger[100000];
-    static double d[][] = new double[10000][10];
+    static double d[][] = new double[10000][5];
     static BigInteger r = new BigInteger("1");
     static BigInteger r1 = new BigInteger("1");
     static BigInteger[][] m0, m1, h0, h1;
@@ -52,7 +48,7 @@ public class Main extends javax.swing.JFrame {
     static BigInteger Y[][] = new BigInteger[10000][5];
     static BigInteger[] Xsum, X0sum, X1sum;
     static BigInteger[] Ysum, Y0sum, Y1sum;
-    static int countU,countU1 = 0;
+    static int countU,countU1,UU = 0;
     static int NumReC,NumColumn,bitlength; //NumReC= Number Records = countU
     static double NumPlay,NumNoPlay;
     static double prob[][] = new double[4][2];
@@ -90,11 +86,11 @@ public class Main extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
+        Generate_Button = new javax.swing.JButton();
+        txt_outlook = new javax.swing.JTextField();
+        txt_temperature = new javax.swing.JTextField();
+        txt_humidity = new javax.swing.JTextField();
+        txt_windy = new javax.swing.JTextField();
         Encrypt_Button = new javax.swing.JButton();
         Decrypt_Button = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
@@ -109,21 +105,23 @@ public class Main extends javax.swing.JFrame {
         Result_TextArea = new javax.swing.JTextArea();
         jLabel6 = new javax.swing.JLabel();
         Key_length_CCB = new javax.swing.JComboBox();
-        jLabel7 = new javax.swing.JLabel();
+        Logo_kma1 = new javax.swing.JLabel();
+        txt_recordlimit = new javax.swing.JTextField();
+        records_Cbb = new javax.swing.JComboBox();
+        jLabel8 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        Public_X = new javax.swing.JButton();
+        Public_Y = new javax.swing.JButton();
+        mi_button = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         Show_detail = new javax.swing.JTextArea();
-        jComboBox1 = new javax.swing.JComboBox();
-        jButton5 = new javax.swing.JButton();
-        jTextField5 = new javax.swing.JTextField();
+        Select_column = new javax.swing.JComboBox();
+        hi_button = new javax.swing.JButton();
+        txt_selectRow = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
+        Logokma2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jPanel2.setLayout(null);
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -138,58 +136,42 @@ public class Main extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jTable1);
 
-        jPanel2.add(jScrollPane1);
-        jScrollPane1.setBounds(159, 13, 742, 159);
-
-        jButton1.setText("Generate Key");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        Generate_Button.setText("Generate Key");
+        Generate_Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                Generate_ButtonActionPerformed(evt);
             }
         });
-        jPanel2.add(jButton1);
-        jButton1.setBounds(12, 13, 104, 49);
 
-        jTextField1.setText("R");
-        jPanel2.add(jTextField1);
-        jTextField1.setBounds(159, 272, 103, 22);
+        txt_outlook.setText("R");
 
-        jTextField2.setText("H");
-        jPanel2.add(jTextField2);
-        jTextField2.setBounds(366, 272, 96, 22);
+        txt_temperature.setText("H");
 
-        jTextField3.setText("P");
-        jPanel2.add(jTextField3);
-        jTextField3.setBounds(556, 272, 99, 22);
+        txt_humidity.setText("P");
 
-        jTextField4.setText("F");
-        jPanel2.add(jTextField4);
-        jTextField4.setBounds(762, 272, 94, 22);
+        txt_windy.setText("F");
 
         Encrypt_Button.setText("Encryption");
-        jPanel2.add(Encrypt_Button);
-        Encrypt_Button.setBounds(12, 80, 104, 53);
-        Encrypt_Button.getAccessibleContext().setAccessibleDescription("");
+        Encrypt_Button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Encrypt_ButtonActionPerformed(evt);
+            }
+        });
 
         Decrypt_Button.setText("Decryption");
-        jPanel2.add(Decrypt_Button);
-        Decrypt_Button.setBounds(12, 151, 104, 51);
+        Decrypt_Button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Decrypt_ButtonActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Temperature:");
-        jPanel2.add(jLabel1);
-        jLabel1.setBounds(366, 190, 80, 24);
 
         jLabel2.setText("Outlook: ");
-        jPanel2.add(jLabel2);
-        jLabel2.setBounds(159, 194, 52, 16);
 
         jLabel3.setText("Humidity:");
-        jPanel2.add(jLabel3);
-        jLabel3.setBounds(556, 194, 54, 16);
 
         jLabel4.setText("Windy:");
-        jPanel2.add(jLabel4);
-        jLabel4.setBounds(762, 194, 40, 16);
 
         Box_Outlook.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Rain=R", "Sunny=S", "Overcast=O" }));
         Box_Outlook.addActionListener(new java.awt.event.ActionListener() {
@@ -197,8 +179,6 @@ public class Main extends javax.swing.JFrame {
                 Box_OutlookActionPerformed(evt);
             }
         });
-        jPanel2.add(Box_Outlook);
-        Box_Outlook.setBounds(159, 232, 95, 22);
 
         Box_Temperature.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Hot=H", "Mild=M", "Cool=C" }));
         Box_Temperature.addActionListener(new java.awt.event.ActionListener() {
@@ -206,8 +186,6 @@ public class Main extends javax.swing.JFrame {
                 Box_TemperatureActionPerformed(evt);
             }
         });
-        jPanel2.add(Box_Temperature);
-        Box_Temperature.setBounds(366, 232, 69, 22);
 
         Box_Humidity.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Peak=P", "Normal=N" }));
         Box_Humidity.addActionListener(new java.awt.event.ActionListener() {
@@ -215,8 +193,6 @@ public class Main extends javax.swing.JFrame {
                 Box_HumidityActionPerformed(evt);
             }
         });
-        jPanel2.add(Box_Humidity);
-        Box_Humidity.setBounds(556, 232, 85, 22);
 
         Box_Windy.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "False=F", "True=T" }));
         Box_Windy.addActionListener(new java.awt.event.ActionListener() {
@@ -224,100 +200,254 @@ public class Main extends javax.swing.JFrame {
                 Box_WindyActionPerformed(evt);
             }
         });
-        jPanel2.add(Box_Windy);
-        Box_Windy.setBounds(762, 232, 73, 22);
 
         Result_TextArea.setColumns(20);
         Result_TextArea.setRows(5);
         jScrollPane2.setViewportView(Result_TextArea);
 
-        jPanel2.add(jScrollPane2);
-        jScrollPane2.setBounds(159, 318, 742, 110);
-
         jLabel6.setFont(new java.awt.Font("Times New Roman", 0, 19)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 51, 51));
         jLabel6.setText("KEY LENGTH");
-        jPanel2.add(jLabel6);
-        jLabel6.setBounds(12, 215, 116, 28);
 
         Key_length_CCB.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "128", "256", "512", "1024" }));
-        jPanel2.add(Key_length_CCB);
-        Key_length_CCB.setBounds(34, 250, 65, 33);
 
-        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/zKMA_image/KMA_ACT.JPG"))); // NOI18N
-        jPanel2.add(jLabel7);
-        jLabel7.setBounds(10, 310, 140, 100);
+        Logo_kma1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/zKMA_image/KMA_ACT.JPG"))); // NOI18N
 
-        jTabbedPane1.addTab("Privacy Bayesclassifier", jPanel2);
+        txt_recordlimit.setText("98");
 
-        jButton2.setText("Public key X");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        records_Cbb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "98", "1008", "2002", "4004" }));
+        records_Cbb.setName(""); // NOI18N
+        records_Cbb.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                records_CbbActionPerformed(evt);
             }
         });
 
-        jButton3.setText("Public key Y");
+        jLabel8.setText("Records Limit");
 
-        jButton4.setText("m[i]");
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(12, 12, 12)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(Generate_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Encrypt_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Decrypt_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(43, 43, 43)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 742, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(Box_Outlook, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(66, 66, 66)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(Box_Temperature, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(251, 251, 251)
+                                .addComponent(Box_Windy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(75, 75, 75)
+                                .addComponent(records_Cbb, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addGap(240, 240, 240)
+                                .addComponent(jLabel4)
+                                .addGap(108, 108, 108)
+                                .addComponent(jLabel8))))))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(12, 12, 12)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel6)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addComponent(Key_length_CCB, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(31, 31, 31)
+                .addComponent(txt_outlook, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(58, 58, 58)
+                .addComponent(txt_temperature, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(64, 64, 64)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(Box_Humidity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_humidity, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addGap(61, 61, 61)
+                .addComponent(txt_windy, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(54, 54, 54)
+                .addComponent(txt_recordlimit, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addComponent(Logo_kma1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(9, 9, 9)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 742, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(13, 13, 13)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(Generate_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(Encrypt_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(Decrypt_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel3)
+                                .addComponent(jLabel4)
+                                .addComponent(jLabel8))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(4, 4, 4)
+                                .addComponent(jLabel2)))))
+                .addGap(1, 1, 1)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(7, 7, 7)
+                        .addComponent(Key_length_CCB, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(13, 13, 13)
+                        .addComponent(Box_Outlook, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(22, 22, 22)
+                        .addComponent(txt_outlook, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(records_Cbb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(txt_recordlimit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(Box_Windy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(21, 21, 21)
+                                .addComponent(txt_windy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(Box_Temperature, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(21, 21, 21)
+                                .addComponent(txt_temperature, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(Box_Humidity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(21, 21, 21)
+                                .addComponent(txt_humidity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(24, 24, 24)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGap(16, 16, 16)
+                        .addComponent(Logo_kma1, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))))
+        );
+
+        Encrypt_Button.getAccessibleContext().setAccessibleDescription("");
+
+        jTabbedPane1.addTab("Privacy Bayesclassifier", jPanel2);
+
+        Public_X.setText("Public key X");
+        Public_X.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Public_XActionPerformed(evt);
+            }
+        });
+
+        Public_Y.setText("Public key Y");
+        Public_Y.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Public_YActionPerformed(evt);
+            }
+        });
+
+        mi_button.setText("m[i]");
+        mi_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mi_buttonActionPerformed(evt);
+            }
+        });
 
         Show_detail.setColumns(20);
         Show_detail.setRows(5);
         jScrollPane3.setViewportView(Show_detail);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Outlook", "Temperature", "Humidity", "Windy" }));
+        Select_column.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Outlook", "Temperature", "Humidity", "Windy" }));
+        Select_column.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Select_columnActionPerformed(evt);
+            }
+        });
 
-        jButton5.setText("h[i]");
+        hi_button.setText("h[i]");
+        hi_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                hi_buttonActionPerformed(evt);
+            }
+        });
 
-        jTextField5.setText("1");
+        txt_selectRow.setText("1");
 
         jLabel5.setText("U'i");
+
+        Logokma2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/zKMA_image/KMA_ACT.JPG"))); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(2, 2, 2)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(10, 10, 10)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(2, 2, 2)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(Public_X, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(Public_Y, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(mi_button, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(Select_column, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel5)
+                                    .addComponent(txt_selectRow)))
+                            .addComponent(hi_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5)
-                            .addComponent(jTextField5)))
-                    .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 748, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap()
+                        .addComponent(Logokma2)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 793, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(23, 23, 23)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(16, 16, 16)
-                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(17, 17, 17)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addGap(4, 4, 4)
-                        .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(23, 23, 23)
+                        .addComponent(Public_X, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(Public_Y, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(mi_button, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(16, 16, 16)
+                        .addComponent(hi_button, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(17, 17, 17)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(Select_column, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel5)
+                                .addGap(4, 4, 4)
+                                .addComponent(txt_selectRow, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(18, 18, 18)
+                        .addComponent(Logokma2))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 417, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
 
         jTabbedPane1.addTab("Detail Protocol", jPanel1);
@@ -336,67 +466,68 @@ public class Main extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void Public_XActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Public_XActionPerformed
         StringBuffer s = new StringBuffer();
         for (int i = 0; i < NumColumn; ++i) {
 
-                s.append("\nYsum["+i+"] "+Ysum[i]);
+                s.append("\nXmulti["+i+"] "+Xsum[i]);
 
             }
         
         Show_detail.setText(""+s);
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_Public_XActionPerformed
 
     private void Box_WindyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Box_WindyActionPerformed
         // TODO add your handling code here:
         if (Box_Windy.getSelectedIndex() == 0){
-            jTextField4.setText("T");
+            txt_windy.setText("F");
         }
         else if (Box_Windy.getSelectedIndex() == 1){
-            jTextField4.setText("F");
+            txt_windy.setText("T");
         }
     }//GEN-LAST:event_Box_WindyActionPerformed
 
     private void Box_HumidityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Box_HumidityActionPerformed
         // TODO add your handling code here:
         if (Box_Humidity.getSelectedIndex() == 0){
-            jTextField3.setText("P");
+            txt_humidity.setText("P");
         }
         else if (Box_Humidity.getSelectedIndex() == 1){
-            jTextField3.setText("N");
+            txt_humidity.setText("N");
         }
     }//GEN-LAST:event_Box_HumidityActionPerformed
 
     private void Box_TemperatureActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Box_TemperatureActionPerformed
         // TODO add your handling code here:
         if (Box_Temperature.getSelectedIndex() == 0){
-            jTextField2.setText("H");
+            txt_temperature.setText("H");
         }
         else if (Box_Temperature.getSelectedIndex() == 1){
-            jTextField2.setText("M");
+            txt_temperature.setText("M");
         }
         else if (Box_Temperature.getSelectedIndex() == 2){
-            jTextField2.setText("C");
+            txt_temperature.setText("C");
         }
     }//GEN-LAST:event_Box_TemperatureActionPerformed
 
     private void Box_OutlookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Box_OutlookActionPerformed
         // TODO add your handling code here:
         if (Box_Outlook.getSelectedIndex() == 0){
-            jTextField1.setText("S");
+            txt_outlook.setText("R");
         }
         else if (Box_Outlook.getSelectedIndex() == 1){
-            jTextField1.setText("O");
+            txt_outlook.setText("S");
         }
         else if (Box_Outlook.getSelectedIndex() == 2){
-            jTextField1.setText("R");
+            txt_outlook.setText("O");
         }
     }//GEN-LAST:event_Box_OutlookActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void Generate_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Generate_ButtonActionPerformed
         // TODO add your handling code here:
+        SQL_Query=( "select * from bayes limit "+ txt_recordlimit.getText()) ;
         List<tad> list = new ArrayList<tad>();
-        list = tadDAO.ListTad();
+        list = tadDAO.ListTad(SQL_Query);
         countU1 = 0;
         while (model.getRowCount() > 0) {
             model.removeRow(0);
@@ -415,20 +546,21 @@ public class Main extends javax.swing.JFrame {
                 bitlength = Integer.valueOf(""+Key_length_CCB.getSelectedItem());
                 Xsum = Crypto.DefaultONE(Xsum, NumColumn);
                 Ysum = Crypto.DefaultONE(Ysum, NumColumn);
-                g = Crypto.RandomBigInt(bitlength);
+                //g = Crypto.RandomBigInt(bitlength);
+                g = new BigInteger("65537");
                 Random rnd1 = new Random();
                 P = BigInteger.probablePrime(bitlength,rnd1);
-
-                Result_TextArea.setText("Generate g = "+g+"\nPrime P = "+ P+"\nGenerate Key = "+ bitlength+ "\n\t\tDONE!");
+                Result_TextArea.setText("Generating.......!");
+                
               
                 try {
                     //STEP 2: Register JDBC driver
 
                     //            conn = DBConnect.openConnection("tad", "123456");
-                    ResultSet rs = tadDAO.ListRs();
+                    ResultSet rs = tadDAO.ListRs(SQL_Query);
                     //STEP 5: Extract data from result set
-                    System.out.println("Table\n"+ countU1);
-                    System.out.println("ID\t   Outlook\t   Temperature\t    Humidity\t      Windy     \tClass");
+                    //System.out.println("Table\n"+ countU1);
+                    //System.out.println("ID\t   Outlook\t   Temperature\t    Humidity\t      Windy     \tClass");
 
                     while (rs.next()) {
                         //Retrieve by column name
@@ -439,26 +571,20 @@ public class Main extends javax.swing.JFrame {
                             Y[countU][i] = g.modPow(y[countU][i],P);
                             Xsum[i] = Xsum[i].multiply(X[countU][i]);
                             Ysum[i] = Ysum[i].multiply(Y[countU][i]);
-                            
-                            
-
-                        }
-                        
+                        }                        
                         int id = rs.getInt("id");
                         tableDB[countU][0]  = rs.getString("Outlook");
                         tableDB[countU][1]  = rs.getString("Temperature");
                         tableDB[countU][2] = rs.getString("Humidity");
                         tableDB[countU][3]  = rs.getString("Windy");
                         tableDB[countU][4]  = rs.getString("Class");
-                        System.out.print(id + "\t\t" + tableDB[countU][0] + "\t\t" + tableDB[countU][1] + "\t\t" + tableDB[countU][2] + "\t\t" + tableDB[countU][3] + "\t\t" + tableDB[countU][4]);
-                        System.out.println();
+                       // System.out.print(id + "\t\t" + tableDB[countU][0] + "\t\t" + tableDB[countU][1] + "\t\t" + tableDB[countU][2] + "\t\t" + tableDB[countU][3] + "\t\t" + tableDB[countU][4]);
+                       // System.out.println();
                         ++countU;
-
                     }
                     //STEP 6: Clean-up environment
                     rs.close();
                     //}
-
                 //            conn.close();
             } catch (SQLException se) {
                 //Handle errors for JDBC
@@ -482,52 +608,57 @@ public class Main extends javax.swing.JFrame {
                     //                se.printStackTrace();
                     //            }//end finally try
             }//end try
+            Result_TextArea.setText("Generate g = "+g+"\nPrime P = "+ P+"\nGenerate Key = "+ bitlength+ "\n\t\tGenerate Key Successful!");
             System.out.println("Goodbye!");
             //close database
             NumReC = countU; //NumReC= Number Records = 14 in this case
-
             System.out.println("Goodbye!" + NumReC);
             System.out.println("Menu:\nOutlook: Sunny=S Overcast=O Rain=R\tTemperature: Hot=H Mild=M Cool=C\n");
             System.out.println("Humidity: Peak=P Normal=N\t\tWindy: True=T False=F\n\nYour input should belong to one of these classes.\n");
             System.out.println("class1: Play=P   class2:Not Play=NP");
             Scanner scr = new Scanner(System.in);
             System.out.println("\nEnter your input: example. t={rain,hot,peak,false} input will be R,H,P,F");
-            String ch;
+
+
+        }
+
+        };
+        new Thread(runnable).start();
+    }//GEN-LAST:event_Generate_ButtonActionPerformed
+
+    private void Encrypt_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Encrypt_ButtonActionPerformed
+        // TODO add your handling code here:
             String S[] = new String[9];
-            /*for (int i = 0; i < 4; ++i) {
-                System.out.println("Nhap gia trị " + (i + 1));
-                S[i] = scr.nextLine();
-            }*/
-            S[0]=jTextField1.getText();
-            S[1]=jTextField2.getText();
-            S[2]=jTextField3.getText();
-            S[3]=jTextField4.getText();
-
-            System.out.println("Nhap gia trị "+jTextField1.getText()+ jTextField2.getText()+jTextField3.getText()+jTextField4.getText());
-
+            S[0]=txt_outlook.getText();
+            S[1]=txt_temperature.getText();
+            S[2]=txt_humidity.getText();
+            S[3]=txt_windy.getText();
+            Result_TextArea.setText("Encrypting.....!");
+            
+            System.out.println("Nhap gia trị "+txt_outlook.getText()+ txt_temperature.getText()+txt_humidity.getText()+txt_windy.getText());
             //count class P and N
             DTBplay = Bayesian.Count_D(tableDB, S, "P", NumColumn, NumReC);
             DTBnoplay = Bayesian.Count_D(tableDB, S, "N", NumColumn, NumReC);
             // Encrypt with class = Play
             m0 = Crypto.EcryptionDM(DTBplay, Xsum, y, g,P, NumColumn, NumReC);
             h0 = Crypto.EcryptionDH(DTBplay, Ysum, x, g,P, NumColumn, NumReC);
-            CountDPlay = Crypto.DecryptionHM(m0, h0, g,P, NumColumn, NumReC);
-
+            
             //Encrypt with class = No
             m1 = Crypto.EcryptionDM(DTBnoplay, Xsum, y, g,P, NumColumn, NumReC);
-            h1 = Crypto.EcryptionDH(DTBnoplay, Ysum, x, g,P, NumColumn, NumReC);
-            CountDnoPlay = Crypto.DecryptionHM(m1, h1, g,P, NumColumn, NumReC);
+            h1 = Crypto.EcryptionDH(DTBnoplay, Ysum, x,g,P, NumColumn, NumReC);
+            
+            Result_TextArea.setText("Encryption DONE...!");    
+      
 
-            for (int i = 0; i < 14; ++i) {
-                for (int j = 0; j < 5; ++j) {
-                    //System.out.println("h[ "+i+j+ "] "+DTBplay[i][j] );
-                    System.out.print("\nm " + m0[i][j]);
-                }
-                System.out.println();
-            }
 
-            //--------------------
+    }//GEN-LAST:event_Encrypt_ButtonActionPerformed
 
+    private void Decrypt_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Decrypt_ButtonActionPerformed
+        // TODO add your handling code here:
+        StringBuffer s = new StringBuffer();
+        CountDPlay = Crypto.DecryptionHM(m0, h0, g,P, NumColumn, NumReC);
+        CountDnoPlay = Crypto.DecryptionHM(m1, h1, g,P, NumColumn, NumReC);
+        
             NumPlay = (double) CountDPlay[4];
             NumNoPlay = (double) CountDnoPlay[4];
             pp = (double) NumPlay / NumReC;
@@ -545,28 +676,82 @@ public class Main extends javax.swing.JFrame {
             cal_N(2);
 
             double pt = play_N + notplay_N;
-            System.out.println("play_N+notplay_N :" + play_N + "+" + notplay_N);
-            System.out.println("pt =" + pt);
+            
             double prob_of_play = 0;
             double prob_of_noplay = 0;
 
             prob_of_play = play_N / pt;
             prob_of_noplay = notplay_N / pt;
-
+            s.append("Probability of play " + prob_of_play);
+            s.append("\nProbability of NO play " + prob_of_noplay); 
             System.out.println("\nProbability of play " + prob_of_play);
-            System.out.println("\nProbability of NO play " + prob_of_noplay);
-
+            System.out.println("\nProbability of NO play " + prob_of_noplay);           
+             
             if (prob_of_play > prob_of_noplay) {
+                s.append("\nThe new tuple classified under \"PLAY\" category.Hence there will be play!!!");
                 System.out.println("\nThe new tuple classified under \"PLAY\" category.Hence there will be play!!!");
             } else {
+                s.append("\nThe new tuple classified under \"NO PLAY\" category.Hence there will be NO play.");
                 System.out.println("\nThe new tuple classified under \"NO PLAY\" category.Hence there will be NO play.");
             }
+            Result_TextArea.setText(""+s);
+    }//GEN-LAST:event_Decrypt_ButtonActionPerformed
 
+    private void records_CbbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_records_CbbActionPerformed
+        // TODO add your handling code here:
+        if (records_Cbb.getSelectedIndex() == 0){
+            txt_recordlimit.setText("98");
         }
+        else if (records_Cbb.getSelectedIndex() == 1){
+            txt_recordlimit.setText("1008");
+        }
+        else if (records_Cbb.getSelectedIndex() == 2){
+            txt_recordlimit.setText("2002");
+        }
+        else if (records_Cbb.getSelectedIndex() == 3){
+            txt_recordlimit.setText("4004");
+        }
+    }//GEN-LAST:event_records_CbbActionPerformed
 
-        };
-        new Thread(runnable).start();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void Public_YActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Public_YActionPerformed
+        // TODO add your handling code here:
+         StringBuffer s = new StringBuffer();
+        for (int i = 0; i < NumColumn; ++i) {
+
+                s.append("\nXmulti["+i+"] "+Xsum[i]);
+
+            }
+        
+        Show_detail.setText(""+s);
+    }//GEN-LAST:event_Public_YActionPerformed
+
+    private void Select_columnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Select_columnActionPerformed
+        if (Select_column.getSelectedIndex() == 0){
+            UU=0;
+        }
+        else if (Select_column.getSelectedIndex() == 1){
+            UU=1;
+        }
+        else if (Select_column.getSelectedIndex() == 2){
+            UU=2;
+        }
+        else if (Select_column.getSelectedIndex() == 3){
+            UU=3;
+        }
+    }//GEN-LAST:event_Select_columnActionPerformed
+
+    private void mi_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mi_buttonActionPerformed
+        // TODO add your handling code here:
+       Show_detail.setText("m of play ="+ m0[UU][Integer.valueOf(""+txt_selectRow.getText())]+
+                      "\nm of NO play ="+ m1[UU][Integer.valueOf(""+txt_selectRow.getText())]);
+       
+    }//GEN-LAST:event_mi_buttonActionPerformed
+
+    private void hi_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hi_buttonActionPerformed
+        // TODO add your handling code here:
+        Show_detail.setText("h of play ="+ h0[UU][Integer.valueOf(""+txt_selectRow.getText())]+
+                      "\nh of NO play ="+ h1[UU][Integer.valueOf(""+txt_selectRow.getText())]);
+    }//GEN-LAST:event_hi_buttonActionPerformed
     
  
             static void cal_N(int a) {
@@ -635,22 +820,23 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JComboBox Box_Windy;
     private javax.swing.JButton Decrypt_Button;
     private javax.swing.JButton Encrypt_Button;
+    private javax.swing.JButton Generate_Button;
     private javax.swing.JComboBox Key_length_CCB;
+    private javax.swing.JLabel Logo_kma1;
+    private javax.swing.JLabel Logokma2;
+    private javax.swing.JButton Public_X;
+    private javax.swing.JButton Public_Y;
     private javax.swing.JTextArea Result_TextArea;
+    private javax.swing.JComboBox Select_column;
     private javax.swing.JTextArea Show_detail;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JButton hi_button;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
@@ -658,10 +844,13 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
+    private javax.swing.JButton mi_button;
+    private javax.swing.JComboBox records_Cbb;
+    private javax.swing.JTextField txt_humidity;
+    private javax.swing.JTextField txt_outlook;
+    private javax.swing.JTextField txt_recordlimit;
+    private javax.swing.JTextField txt_selectRow;
+    private javax.swing.JTextField txt_temperature;
+    private javax.swing.JTextField txt_windy;
     // End of variables declaration//GEN-END:variables
 }

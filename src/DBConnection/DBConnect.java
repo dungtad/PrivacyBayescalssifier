@@ -17,22 +17,30 @@ import java.util.logging.Logger;
  * @author TAD
  */
 public class DBConnect {
+    static String IPP,DBNAME,USER,PASS;
+    
     public static Connection openConnection(){
         Connection con = null;
             try {
                 Class.forName("com.mysql.jdbc.Driver");
-                con = DriverManager.getConnection("jdbc:mysql://192.168.124.99/KMA", "tad", "123456");
+                con = DriverManager.getConnection("jdbc:mysql://"+IPP+"/"+DBNAME, USER, PASS);
             } catch (Exception e) {
                 Logger.getLogger(DBConnect.class.getName()).log(Level.SEVERE,null,e);
             }
             
         return con;
     }
-    public static Connection openConnection(String user, String pass){
+    public static Connection openConnection(String IP,String DBname,String user, String pass){
         Connection con = null;
+        IPP=IP;
+        DBNAME=DBname;
+        USER=user;
+        PASS=pass;
+        //System.out.println("jdbc:mysql://"+IP+"/"+DBname +","+ user+ "," +pass);
+        
             try {
                 Class.forName("com.mysql.jdbc.Driver");
-                con = DriverManager.getConnection("jdbc:mysql://192.168.124.99/KMA", user, pass);
+                con = DriverManager.getConnection("jdbc:mysql://"+IP+"/"+DBname, user, pass);
             } catch (Exception e) {
                 Logger.getLogger(DBConnect.class.getName()).log(Level.SEVERE,null,e);
             }
