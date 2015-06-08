@@ -37,17 +37,21 @@ public class Main extends javax.swing.JFrame {
     static int[] CountDPlay, CountDnoPlay;
     static BigInteger x[][] = new BigInteger[10000][5];
     static BigInteger y[][] = new BigInteger[10000][5];
-    static BigInteger m[] = new BigInteger[100000];
-    static BigInteger h[] = new BigInteger[100000];
+    static BigInteger X[][] = new BigInteger[10000][5];
+    static BigInteger Y[][] = new BigInteger[10000][5];
+    static BigInteger x1[][] = new BigInteger[10000][5];
+    static BigInteger y1[][] = new BigInteger[10000][5];
+    static BigInteger X1[][] = new BigInteger[10000][5];
+    static BigInteger Y1[][] = new BigInteger[10000][5];
+    
+    static BigInteger[] Xmulti,X1multi;
+    static BigInteger[] Ymulti,Y1multi;
     static double d[][] = new double[10000][5];
     static BigInteger r = new BigInteger("1");
     static BigInteger r1 = new BigInteger("1");
     static BigInteger[][] m0, m1, h0, h1;
     static BigInteger P,g;
-    static BigInteger X[][] = new BigInteger[10000][5];
-    static BigInteger Y[][] = new BigInteger[10000][5];
-    static BigInteger[] Xsum, X0sum, X1sum;
-    static BigInteger[] Ysum, Y0sum, Y1sum;
+
     static int countU,countU1,UU = 0;
     static int NumReC,NumColumn,bitlength; //NumReC= Number Records = countU
     static double NumPlay,NumNoPlay;
@@ -470,7 +474,7 @@ public class Main extends javax.swing.JFrame {
         StringBuffer s = new StringBuffer();
         for (int i = 0; i < NumColumn; ++i) {
 
-                s.append("\nXmulti["+i+"] "+Xsum[i]);
+                s.append("\nXmulti["+i+"] "+Xmulti[i]);
 
             }
         
@@ -544,10 +548,12 @@ public class Main extends javax.swing.JFrame {
                 Statement stmt = null;
                 NumColumn = 5;
                 bitlength = Integer.valueOf(""+Key_length_CCB.getSelectedItem());
-                Xsum = Crypto.DefaultONE(Xsum, NumColumn);
-                Ysum = Crypto.DefaultONE(Ysum, NumColumn);
+                Xmulti = Crypto.DefaultONE(Xmulti, NumColumn);
+                Ymulti = Crypto.DefaultONE(Ymulti, NumColumn);
+                X1multi = Crypto.DefaultONE(X1multi, NumColumn);
+                Y1multi = Crypto.DefaultONE(Y1multi, NumColumn);
                 //g = Crypto.RandomBigInt(bitlength);
-                g = new BigInteger("65537");
+                g = new BigInteger("3");
                 Random rnd1 = new Random();
                 P = BigInteger.probablePrime(bitlength,rnd1);
                 Result_TextArea.setText("Generating.......!");
@@ -565,13 +571,24 @@ public class Main extends javax.swing.JFrame {
                     while (rs.next()) {
                         //Retrieve by column name
                         for (int i = 0; i < 5; ++i) {
+                            //For class NO
                             x[countU][i] = Crypto.RandomBigInt(bitlength);
                             y[countU][i] = Crypto.RandomBigInt(bitlength);
                             X[countU][i] = g.modPow(x[countU][i],P);
                             Y[countU][i] = g.modPow(y[countU][i],P);
-                            Xsum[i] = Xsum[i].multiply(X[countU][i]);
-                            Ysum[i] = Ysum[i].multiply(Y[countU][i]);
-                        }                        
+                            Xmulti[i] = ( Xmulti[i].multiply(X[countU][i]) ).mod(P);
+                            Ymulti[i] = ( Ymulti[i].multiply(Y[countU][i]) ).mod(P);
+                            //For class Yes 
+                            x1[countU][i] = Crypto.RandomBigInt(bitlength);
+                            y1[countU][i] = Crypto.RandomBigInt(bitlength);
+                            X1[countU][i] = g.modPow(x1[countU][i],P);
+                            Y1[countU][i] = g.modPow(y1[countU][i],P);
+                            X1multi[i] = ( X1multi[i].multiply(X1[countU][i]) ).mod(P);
+                            Y1multi[i] = ( Y1multi[i].multiply(Y1[countU][i]) ).mod(P);
+                            
+                        }
+ 
+                        
                         int id = rs.getInt("id");
                         tableDB[countU][0]  = rs.getString("Outlook");
                         tableDB[countU][1]  = rs.getString("Temperature");
@@ -608,18 +625,31 @@ public class Main extends javax.swing.JFrame {
                     //                se.printStackTrace();
                     //            }//end finally try
             }//end try
-            Result_TextArea.setText("Generate g = "+g+"\nPrime P = "+ P+"\nGenerate Key = "+ bitlength+ "\n\t\tGenerate Key Successful!");
+           
             System.out.println("Goodbye!");
             //close database
             NumReC = countU; //NumReC= Number Records = 14 in this case
+            System.out.println("Goodbye1111" + Xmulti[1]+"\nGoodbye111156"+Xmulti[1].mod(P) );
             System.out.println("Goodbye!" + NumReC);
             System.out.println("Menu:\nOutlook: Sunny=S Overcast=O Rain=R\tTemperature: Hot=H Mild=M Cool=C\n");
             System.out.println("Humidity: Peak=P Normal=N\t\tWindy: True=T False=F\n\nYour input should belong to one of these classes.\n");
             System.out.println("class1: Play=P   class2:Not Play=NP");
             Scanner scr = new Scanner(System.in);
             System.out.println("\nEnter your input: example. t={rain,hot,peak,false} input will be R,H,P,F");
-
-
+            
+            String S[] = new String[9];
+            S[0]=txt_outlook.getText();
+            S[1]=txt_temperature.getText();
+            S[2]=txt_humidity.getText();
+            S[3]=txt_windy.getText();
+            
+            System.out.println("Nhap gia trị "+txt_outlook.getText()+ txt_temperature.getText()+txt_humidity.getText()+txt_windy.getText());
+            //count class P and N
+            DTBplay = Bayesian.Count_D(tableDB, S, "P", NumColumn, NumReC);
+            DTBnoplay = Bayesian.Count_D(tableDB, S, "N", NumColumn, NumReC);
+            
+            
+            Result_TextArea.setText("Generate g = "+g+"\nPrime P = "+ P+"\nGenerate Key = "+ bitlength+ "\n\t\tGenerate Key Successful!");
         }
 
         };
@@ -628,27 +658,24 @@ public class Main extends javax.swing.JFrame {
 
     private void Encrypt_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Encrypt_ButtonActionPerformed
         // TODO add your handling code here:
-            String S[] = new String[9];
-            S[0]=txt_outlook.getText();
-            S[1]=txt_temperature.getText();
-            S[2]=txt_humidity.getText();
-            S[3]=txt_windy.getText();
-            Result_TextArea.setText("Encrypting.....!");
-            
-            System.out.println("Nhap gia trị "+txt_outlook.getText()+ txt_temperature.getText()+txt_humidity.getText()+txt_windy.getText());
-            //count class P and N
-            DTBplay = Bayesian.Count_D(tableDB, S, "P", NumColumn, NumReC);
-            DTBnoplay = Bayesian.Count_D(tableDB, S, "N", NumColumn, NumReC);
+            Runnable runnable = new Runnable() {
+
+            @Override
+            public void run() {
             // Encrypt with class = Play
-            m0 = Crypto.EcryptionDM(DTBplay, Xsum, y, g,P, NumColumn, NumReC);
-            h0 = Crypto.EcryptionDH(DTBplay, Ysum, x, g,P, NumColumn, NumReC);
+            Result_TextArea.setText("Encrypting.....!");
+            m0 = Crypto.EcryptionDM(DTBplay, Xmulti, y, g,P, NumColumn, NumReC);
+            h0 = Crypto.EcryptionDH(DTBplay, Ymulti, x, g,P, NumColumn, NumReC);
             
             //Encrypt with class = No
-            m1 = Crypto.EcryptionDM(DTBnoplay, Xsum, y, g,P, NumColumn, NumReC);
-            h1 = Crypto.EcryptionDH(DTBnoplay, Ysum, x,g,P, NumColumn, NumReC);
+            m1 = Crypto.EcryptionDM(DTBnoplay, X1multi, y1,g,P, NumColumn, NumReC);
+            h1 = Crypto.EcryptionDH(DTBnoplay, Y1multi, x1,g,P, NumColumn, NumReC);
             
             Result_TextArea.setText("Encryption DONE...!");    
-      
+       }
+
+        };
+        new Thread(runnable).start();
 
 
     }//GEN-LAST:event_Encrypt_ButtonActionPerformed
@@ -718,7 +745,7 @@ public class Main extends javax.swing.JFrame {
          StringBuffer s = new StringBuffer();
         for (int i = 0; i < NumColumn; ++i) {
 
-                s.append("\nXmulti["+i+"] "+Xsum[i]);
+                s.append("\nXmulti["+i+"] "+Xmulti[i]);
 
             }
         
